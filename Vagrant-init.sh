@@ -62,15 +62,15 @@ APP_ROOT="/home/vagrant/"
 APP_PATH="$APP_ROOT/agent"
 
 if [ ! -d "$APP_PATH" ]; then
-	echo "Clonando el repositorio en $APP_PATH ..."
-	sudo mkdir -p $APP_ROOT
-	cd $APP_ROOT
-	sudo git clone https://github.com/rvegabaldiviezo/agent.git agent
-	cd $APP_PATH
-
-	sh run.sh
-	# Si el repo no tiene commits, esto va a fallar
-	# sudo git checkout master || true
+    echo "Clonando el repositorio en $APP_PATH ..."
+    sudo mkdir -p $APP_ROOT
+    cd $APP_ROOT
+    sudo git clone https://github.com/rvegabaldiviezo/agent.git agent
 fi
+
+cd $APP_PATH
+git checkout master
+git pull origin master
+docker compose up --build -d
 
 
