@@ -1,23 +1,25 @@
 #  TP 
 
 
+## comandos de deploy
 
-## comandos
+- Levanta la VM en el puerto que le definimos (Valgranfile). Una vez finalice ir a http://localhost:8000/ para usar la App.
 
+Primero si existe la VM la destruimos. 
+```bash 
+vagrant destroy -f
+```
 
-- Levanta la VM en el puerto que le definimos (Valgranfile). Una vez finalice ir a http://localhost:8085/
-
+Construir la VM.
 ```bash 
 vagrant up
 ```
+
+
+## comandos de validacion del estado de la VM
 
 - Conectarnos a la VM por ssh
 
 ```bash 
 vagrant ssh  
-```
-
-- Ver dentro de la VM lo que existe en la carpeta /vagrant
-```bash 
-sudo ls -l /vagrant
 ```
