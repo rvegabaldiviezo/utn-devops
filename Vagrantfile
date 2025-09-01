@@ -28,19 +28,19 @@ Vagrant.configure("2") do |config|
   # Esto se realiza para poder darle visibilidad a los puertos de la maquina virtual
   # y además para que no se solapen los puertos con los de nuestra equipo en el caso de que
   # ese número de puerto este en uso.
-  config.vm.network "forwarded_port", guest: 80, host: 8085
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
 
   #Permite descargas con certificados vencidos o por http
   config.vm.box_download_insecure = true
 
 
   # configuración del nombre de maquina
-  config.vm.hostname = "utn-devops.localhost"
+  config.vm.hostname = "utn-devops-tp2.localhost"
   config.vm.boot_timeout = 3600
 
   #Configuro la cantidad de memoria ram de la VM para el proveedor VirtualBox
   config.vm.provider "virtualbox" do |v|
-	  v.name = "utn-devops-vagrant-ubuntu"
+	  v.name = "utn-devops-tp2-vagrant-ubuntu"
     v.memory = "1024"
   end
 
@@ -57,11 +57,11 @@ Vagrant.configure("2") do |config|
 
   # Copia el archivo de configuración del servidor web. Este comando transfiere un archivo desde la maquina host
   # a la maquina cliente
-  config.vm.provision "file", source: "Configs/devops.site.conf", destination: "/tmp/devops.site.conf"
+  # config.vm.provision "file", source: "Configs/devops.site.conf", destination: "/tmp/devops.site.conf"
 
   # En este archivo tendremos el provisionamiento de software necesario para nuestra
   # maquina virtual. Por ejemplo, servidor web, servidor de base de datos, etc.
-  config.vm.provision :shell, path: "Vagrant.bootstrap.sh", run: "always"
+  config.vm.provision :shell, path: "Vagrant-init.sh", run: "always"
 
 
 end
