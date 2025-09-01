@@ -5,12 +5,12 @@
 
 - Levanta la VM en el puerto que le definimos (Valgranfile). Una vez finalice ir a http://localhost:8000/ para usar la App.
 
-Primero si existe la VM la destruimos. 
+Si ya existe la VM la destruimos. 
 ```bash 
 vagrant destroy -f
 ```
 
-Construir la VM.
+Construir la VM con todas las dependencias instaladas (Docker, Repo de la App, etc).
 ```bash 
 vagrant up
 ```
@@ -23,3 +23,17 @@ vagrant up
 ```bash 
 vagrant ssh  
 ```
+
+- Ver los containers deployeados
+
+```bash 
+docker ps
+```
+
+
+## Repo donde esta la App para esta prueba
+
+
+- Name Repo:   Agent
+- Branch: 	Master
+- Url:  		https://github.com/rvegabaldiviezo/agent 

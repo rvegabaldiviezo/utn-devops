@@ -2,15 +2,21 @@
 
 ### Aprovisionamiento de software ###
 
+
+# --- Fix DNS permanente para evitar problemas de resolución ---
+sudo rm -f /etc/resolv.conf
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+sudo chattr +i /etc/resolv.conf
+
 # Espero a que liberen los locks de apt antes de actualizar
 while sudo fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do
-   echo "Esperando a que liberen /var/lib/apt/lists/lock..."
-   sleep 5
+  echo "Esperando a que liberen /var/lib/apt/lists/lock..."
+  sleep 5
 done
 
 while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
-   echo "Esperando a que liberen /var/lib/dpkg/lock-frontend..."
-   sleep 5
+  echo "Esperando a que liberen /var/lib/dpkg/lock-frontend..."
+  sleep 5
 done
 
 sudo apt-get update -y
