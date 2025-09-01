@@ -43,7 +43,8 @@ Este trabajo práctico consiste en automatizar el despliegue de una aplicación 
 	 ```
 
 3. **Acceder a la aplicación:**
-	 Abre tu navegador y entra a: [http://localhost:8000/](http://localhost:8000/)
+	Abre tu navegador y entra a: [http://localhost:8000/](http://localhost:8000/)
+    ![Aplicación desplegada](src/images/app.png)
 
 ---
 
@@ -58,6 +59,8 @@ Este trabajo práctico consiste en automatizar el despliegue de una aplicación 
 	```bash
 	docker ps
 	```
+    ![Contenedores Docker activos](src/images/containers.png)
+
 
 - **Ver logs de un contenedor (por ejemplo, el de la app):**
 	```bash
