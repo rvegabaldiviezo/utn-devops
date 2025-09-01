@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
   # Esto se realiza para poder darle visibilidad a los puertos de la maquina virtual
   # y además para que no se solapen los puertos con los de nuestra equipo en el caso de que
   # ese número de puerto este en uso.
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 8000, host: 8080
 
   #Permite descargas con certificados vencidos o por http
   config.vm.box_download_insecure = true
