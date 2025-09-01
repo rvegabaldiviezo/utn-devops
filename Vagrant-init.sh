@@ -77,6 +77,6 @@ fi
 cd $APP_PATH
 git checkout master
 git pull origin master
-docker compose up --build -d
+docker compose up --build -dr
 
 
