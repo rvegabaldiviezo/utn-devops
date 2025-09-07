@@ -12,12 +12,13 @@ Esta práctica tiene como objetivo **automatizar la instalación de Jenkins medi
 git clone https://github.com/rvegabaldiviezo/utn-devops.git
 cd utn-devops
 git checkout unidad-3-puppet
+git pull origin unidad-3-puppet
 ```
 
 ### 2. Revisar la estructura de archivos
 Los archivos principales para esta práctica son:
 - `Vagrantfile` → define la VM de Vagrant.
-- `Vagrant.bootstrap.sh` → script de aprovisionamiento que instala Puppet y aplica manifiestos.
+- `Vagrant.init.sh` → script de aprovisionamiento que instala Puppet y aplica manifiestos.
 - `hostConfigs/puppet/site.pp` → manifiesto principal que incluye la clase Jenkins.
 - `hostConfigs/puppet/modules/jenkins/manifests/init.pp` → módulo que instala y configura Jenkins.
 
@@ -35,17 +36,12 @@ Una vez completado el aprovisionamiento:
   2. Seleccionar **Install suggested plugins**.
   3. Crear un usuario administrador.
 
-### 5. Evidencias requeridas
-- Captura de pantalla del formulario de creación de usuario administrador.
-- Captura de pantalla de los plugins instalados (Install suggested plugins).
-
 ---
 
 ## Resultado esperado
 Al finalizar estos pasos:
 - Jenkins debe estar instalado y funcionando en la VM.
 - El acceso desde el host debe estar disponible en el puerto `8082`.
-- Se habrán generado las evidencias necesarias para completar la entrega.
 
 ---
 
