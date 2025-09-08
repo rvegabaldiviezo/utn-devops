@@ -1,38 +1,70 @@
 # -*- mode: ruby -*-
-# Vagrantfile para Windows/Linux/Mac
-# Puppet + Jenkins (1 VM)
-# Forwarded port 8080 -> 8082
+# vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  # ---------------------------------------------------------------------------
-  # Selección de box según arquitectura
-  # ---------------------------------------------------------------------------
-  if Vagrant::Util::Platform.architecture == 'arm64'
-    box_image = "bento/ubuntu-22.04-arm64"
-    puts "🍎 Arquitectura ARM64 detectada - Usando imagen optimizada"
+
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+  end
+  
+  #Imagen por defecto
+  box = 'ubuntu/jammy64'
+  
+  #Si se ejecuta sobre macOS se configura otra imagen
+  if Vagrant::Util::Platform::architecture == 'arm64' 
+    box = "bento/ubuntu-22.04-arm64"
   else
-    box_image = "ubuntu/jammy64"
-    puts "🖥️  Arquitectura x86_64 detectada - Usando imagen estándar"
+    config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y virtualbox-guest-x11"
   end
 
-  config.vm.box = box_image
+  # Con esto le indicamos a Vagrant que vaya al directorio de "cajas" (boxes) que contiene su Atlas e instale un
+  # Ubuntu 64 bits mediante el gestor de maquinas virtuales VirtualBox
+  # El directorio completo de boxes se puede ver en la siguiente URL https://app.vagrantup.com/boxes/search
+  config.vm.box = box
 
-  # ---------------------------------------------------------------------------
-  # Definición de VM Puppet
-  # ---------------------------------------------------------------------------
-  config.vm.define "puppet" do |puppet|
-    puppet.vm.hostname = "puppet.local"
+  # Redirecciono puertos desde la maquina virtual a la maquina real. Por ejemplo
+  # del puerto 80 (web) de la maquina virtual con Debian se podrá acceder a través
+  # del puerto 8081 de nuestro navegador.
+  # Esto se realiza para poder darle visibilidad a los puertos de la maquina virtual
+  # y además para que no se solapen los puertos con los de nuestra equipo en el caso de que
+  # ese número de puerto este en uso.
+  config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "0.0.0.0"
 
-    # Solo forwarded port para Jenkins, evita host-only issues en Windows
-    puppet.vm.network "forwarded_port", guest: 8080, host: 8082, auto_correct: true
+  #Permite descargas con certificados vencidos o por http
+  config.vm.box_download_insecure = true
 
-    # Recursos recomendados para Puppet + Jenkins
-    puppet.vm.provider "virtualbox" do |vb|
-      vb.memory = 4096  # 4GB RAM
-      vb.cpus   = 2
-    end
 
-    # Ejecuta el script de bootstrap que prepara Puppet
-    puppet.vm.provision "shell", path: "Vagrant.init.sh"
+  # configuración del nombre de maquina
+  config.vm.hostname = "utn-devops-tp2.localhost"
+  config.vm.boot_timeout = 3600
+
+  #Configuro la cantidad de memoria ram de la VM para el proveedor VirtualBox
+  config.vm.provider "virtualbox" do |v|
+	  v.name = "utn-devops-tp2-vagrant-ubuntu"
+    v.memory = "6144"
   end
+
+  # Mapeo de directorios que se comparten entre la maquina virtual y nuestro equipo. En este caso es
+  # el propio directorio donde está el archivo  y el directorio "/vagrant" dentro de la maquina virtual.
+  config.vm.synced_folder ".", "/vagrant"
+
+
+  #Configuro la cantidad de memoria ram de la VM para el proveedor VMware
+  config.vm.provider "vmware_desktop" do |vm|
+    vm.memory = "1024"
+  end
+
+  config.vm.synced_folder "./puppet-config", "/tmp/puppet-config", create: true
+  config.vm.synced_folder "./puppet-manifests", "/tmp/puppet-manifests", create: true
+
+
+  # Copia el archivo de configuración del servidor web. Este comando transfiere un archivo desde la maquina host
+  # a la maquina cliente
+  # config.vm.provision "file", source: "Configs/devops.site.conf", destination: "/tmp/devops.site.conf"
+
+  # En este archivo tendremos el provisionamiento de software necesario para nuestra
+  # maquina virtual. Por ejemplo, servidor web, servidor de base de datos, etc.
+  config.vm.provision :shell, path: "Vagrant-init.sh", run: "always"
+
+
 end

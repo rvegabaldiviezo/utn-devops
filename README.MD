@@ -1,57 +1,88 @@
-# Práctica 3 - Exploratoria: automatizar la instalación de Jenkins mediante Puppet
 
-## Descripción de la actividad
-Esta práctica tiene como objetivo **automatizar la instalación de Jenkins mediante Puppet**, utilizando **Vagrant** como herramienta para levantar una máquina virtual reproducible. 
 
----
+# Práctica 2 - Exploratoria: Automatización de despliegue con Vagrant y Docker
 
-## Pasos de ejecución
 
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/rvegabaldiviezo/utn-devops.git
-cd utn-devops
-git checkout unidad-3-puppet
-git pull origin unidad-3-puppet
-```
-
-### 2. Revisar la estructura de archivos
-Los archivos principales para esta práctica son:
-- `Vagrantfile` → define la VM de Vagrant.
-- `Vagrant.init.sh` → script de aprovisionamiento que instala Puppet y aplica manifiestos.
-- `hostConfigs/puppet/site.pp` → manifiesto principal que incluye la clase Jenkins.
-- `hostConfigs/puppet/modules/jenkins/manifests/init.pp` → módulo que instala y configura Jenkins.
-
-### 3. Levantar la VM con Vagrant
-```bash
-vagrant up --provision
-```
-> Este comando crea la máquina virtual, ejecuta el script de aprovisionamiento y aplica el manifiesto de Puppet.
-
-### 4. Verificar Jenkins
-Una vez completado el aprovisionamiento:
-- Acceder desde el navegador del host a: [http://127.0.0.1:8082](http://127.0.0.1:8082)
-- Seguir los pasos iniciales de Jenkins:
-  1. Ingresar con la contraseña inicial desde `/var/lib/jenkins/secrets/initialAdminPassword`.
-  2. Seleccionar **Install suggested plugins**.
-  3. Crear un usuario administrador.
+Este trabajo práctico consiste en automatizar el despliegue de una aplicación web y una base de datos usando Vagrant y Docker, reutilizando la imagen de Ubuntu creada en la práctica anterior. El objetivo es que, al levantar la VM, se instalen todas las dependencias y se despliegue la app en contenedores, permitiendo acceder a la aplicación desde el navegador de la máquina host.
 
 ---
 
-## Resultado esperado
-Al finalizar estos pasos:
-- Jenkins debe estar instalado y funcionando en la VM.
-- El acceso desde el host debe estar disponible en el puerto `8082`.
+## Grupo 6 - Integrantes
+
+- Gustavo Venturo
+- Ramon Vega
+- Mariano Diez
+- Leandro Emmanuel Iriarte
+- Juan Magnacco
+- Alexander Martinez
+- Imanol Penaloza
+- Matias Santo Stefano
 
 ---
 
-## Nota
-En caso de errores durante el aprovisionamiento, se recomienda ejecutar:
-```bash
-vagrant reload --provision
-```
-o bien aplicar manualmente Puppet dentro de la VM:
-```bash
-vagrant ssh
-sudo /opt/puppetlabs/bin/puppet apply /etc/puppet/code/environments/production/site.pp
-```
+## 🎯 Objetivo
+
+- Instalar Docker automáticamente en la VM usando Vagrant.
+- Desplegar dos contenedores: uno con el servidor web (y la app) y otro con la base de datos.
+- Mapear el puerto 8000/8000 del contenedor de la VM al host para acceder a la app desde el navegador.
+- Persistir los datos de la base de datos usando volúmenes de Docker.
+- El código de la app y la infraestructura deben estar en repos separados.
+
+---
+
+## 🚀 Pasos para el despliegue
+
+1. **(Opcional) Eliminar la VM existente:**
+	 ```bash
+	 vagrant destroy -f
+	 ```
+
+2. **Levantar la VM y aprovisionar todo:**
+	 ```bash
+	 vagrant up
+	 ```
+
+3. **Acceder a la aplicación:**
+	Abre tu navegador y entra a: [http://localhost:8000/](http://localhost:8000/)
+    ![Aplicación desplegada](src/images/app.png)
+
+---
+
+## 🔎 Comandos útiles para validación
+
+- **Conectarse a la VM por SSH:**
+	```bash
+	vagrant ssh
+	```
+
+- **Ver los contenedores Docker activos:**
+	```bash
+	docker ps
+	```
+    ![Contenedores Docker activos](src/images/containers.png)
+
+
+- **Ver logs de un contenedor (por ejemplo, el de la app):**
+	```bash
+	docker logs -f <CONTAINER_ID>
+	```
+
+- **Apagar la VM (sin destruirla):**
+	```bash
+	vagrant halt
+	```
+
+- **Eliminar la VM completamente:**
+	```bash
+	vagrant destroy -f
+	```
+
+---
+
+## 📦 Información del repositorio de la App
+
+- **Nombre:** Agent
+- **Branch principal:** Master
+- **URL:** https://github.com/rvegabaldiviezo/agent
+
+---
