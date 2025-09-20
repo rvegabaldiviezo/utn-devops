@@ -11,21 +11,21 @@ class jenkins {
     require => Exec['apt-update'],
   }
 
-  package { ['wget', 'curl', 'gnupg']:
+  package { ['wget', 'curl', 'gnupg', 'apt-transport-https', 'ca-certificates']:
     ensure  => installed,
     require => Exec['apt-update'],
   }
 
   exec { 'add-jenkins-key':
-    command => '/usr/bin/wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | /usr/bin/apt-key add -',
+    command => '/usr/bin/curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | /usr/bin/gpg --dearmor -o /usr/share/keyrings/jenkins-keyring.gpg',
     path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    unless  => '/usr/bin/apt-key list | /bin/grep jenkins',
-    require => Package['wget'],
+    creates => '/usr/share/keyrings/jenkins-keyring.gpg',
+    require => Package['curl'],
   }
 
   file { '/etc/apt/sources.list.d/jenkins.list':
     ensure  => file,
-    content => "deb https://pkg.jenkins.io/debian-stable binary/\n",
+    content => "deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/\n",
     require => Exec['add-jenkins-key'],
     notify  => Exec['apt-update-jenkins'],
   }
