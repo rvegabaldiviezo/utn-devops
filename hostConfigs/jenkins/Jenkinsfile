@@ -13,11 +13,11 @@ pipeline {
             steps {
                 echo 'Clonando repositorio...'
                 sh '''
-                    rm -rf agente
+                    rm -rf agent
 
                     git clone ${REPO_URL}
 
-                    cd agente
+                    cd agent
                     git checkout ${BRANCH}
                     git pull origin ${BRANCH}
                 '''
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo 'Construyendo imagen Docker...'
                 sh '''
-                    cd utn-devops-app
+                    cd agent
                     
                     if [ ! -f Dockerfile ]; then
                         echo "Error: No se encontró Dockerfile en el repositorio"
@@ -45,7 +45,6 @@ pipeline {
                 echo 'Probando imagen Docker...'
                 sh '''
                     docker run --rm ${IMAGE_NAME}:${IMAGE_TAG} echo "Imagen construida exitosamente"
-                
                 '''
             }
         }
