@@ -34,8 +34,8 @@ pipeline {
                         echo "Error: No se encontró Dockerfile en el repositorio"
                         exit 1
                     fi
-                    sudo docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-                    sudo docker build -t ${IMAGE_NAME}:latest .
+                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                    docker build -t ${IMAGE_NAME}:latest .
                 '''
             }
         }
@@ -44,9 +44,10 @@ pipeline {
             steps {
                 echo 'Probando imagen Docker...'
                 sh '''
-                    sudo docker run --rm ${IMAGE_NAME}:${IMAGE_TAG} echo "Imagen construida exitosamente"
+                    docker run --rm ${IMAGE_NAME}:${IMAGE_TAG} echo "Imagen construida exitosamente"
                 '''
             }
         }
+        
     }
 }
