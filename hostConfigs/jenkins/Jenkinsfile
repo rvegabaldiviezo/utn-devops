@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    
+    environment {
+        REPO_URL = 'https://github.com/rvegabaldiviezo/agent.git'
+        BRANCH = 'master'
+        IMAGE_NAME = 'agente'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Clonando repositorio...'
+                sh '''
+                    rm -rf agente
+
+                    git clone ${REPO_URL}
+
+                    cd agente
+                    git checkout ${BRANCH}
+                    git pull origin ${BRANCH}
+                '''
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo 'Construyendo imagen Docker...'
+                sh '''
+                    cd utn-devops-app
+                    
+                    if [ ! -f Dockerfile ]; then
+                        echo "Error: No se encontró Dockerfile en el repositorio"
+                        exit 1
+                    fi
+                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                    docker build -t ${IMAGE_NAME}:latest .
+                '''
+            }
+        }
+        
+        stage('Test Docker Image') {
+            steps {
+                echo 'Probando imagen Docker...'
+                sh '''
+                    docker run --rm ${IMAGE_NAME}:${IMAGE_TAG} echo "Imagen construida exitosamente"
+                
+                '''
+            }
+        }
+    }
+}
